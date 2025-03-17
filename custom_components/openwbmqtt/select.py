@@ -10,6 +10,8 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.util import slugify
+from homeassistant.components.mqtt import publish
+
 
 from .common import OpenWBBaseEntity
 from .const import (
@@ -154,4 +156,6 @@ class openwbSelect(OpenWBBaseEntity, SelectEntity):
             publish_mqtt_message = False
 
         if publish_mqtt_message:
-            self.hass.components.mqtt.publish(self.hass, topic, payload)
+            publish(self.hass, topic, payload)
+            # self.hass.components.mqtt.publish(self.hass, topic, payload) # stop working in Home Assistant 2025.3
+            
