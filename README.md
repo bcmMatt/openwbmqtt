@@ -1,4 +1,5 @@
-### Since openWB2 is out for some time, I archive this repo. Feel free to fork if you still need it.
+### Since openWB1 is no longer maintaned, I try to keep this alive for myself and the further updates of Homeassistant.
+### This is a fork of the openwbmqtt repository: https://github.com/a529987659852/openwbmqtt
 
 ### If you're on openWB2, look here --> https://github.com/a529987659852/openwb2mqtt
 # openwbmqtt
