@@ -1,5 +1,5 @@
 ### Since openWB 1.x is no longer maintaned, I try to keep this alive for myself and the further updates of Homeassistant.
-Tested with OpenWB 1.9.303
+Tested with OpenWB 1.9.303 and HA 2025.9.4
 
 ### Use at your own risk!
 This is a fork of the openwbmqtt repository: https://github.com/a529987659852/openwbmqtt
