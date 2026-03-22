@@ -1,4 +1,4 @@
-"""The openwbmqtt component for controlling the openWB wallbox via home assistant / MQTT."""
+"""The openwbmqtt component for controlling the openWB wallbox via home assistant MQTT."""
 from __future__ import annotations
 
 import copy
@@ -18,56 +18,58 @@ from .common import OpenWBBaseEntity
 
 # Import global values.
 from .const import (
-    CHARGE_POINTS,
-    MQTT_ROOT_TOPIC,
-    SENSORS_GLOBAL,
-    SENSORS_PER_LP,
+    CHARGEPOINTS,
+    MQTTROOTTOPIC,
+    SENSORSGLOBAL,
+    SENSORSPERLP,
     openwbSensorEntityDescription,
 )
 
-_LOGGER = logging.getLogger(__name__)
+LOGGER = logging.getLogger(__name__)
 
 
 async def async_setup_entry(
-    hass: HomeAssistant, config: ConfigEntry, async_add_entities: AddEntitiesCallback
+    hass: HomeAssistant,
+    config: ConfigEntry,
+    async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up sensors for openWB."""
-
     integrationUniqueID = config.unique_id
-    mqttRoot = config.data[MQTT_ROOT_TOPIC]
-    nChargePoints = config.data[CHARGE_POINTS]
+    mqttRoot = config.data[MQTTROOTTOPIC]
+    nChargePoints = config.data[CHARGEPOINTS]
 
-    sensorList = []
+    sensorList: list[openwbSensor] = []
+
     # Create all global sensors.
-    global_sensors = copy.deepcopy(SENSORS_GLOBAL)
-    for description in global_sensors:
-        description.mqttTopicCurrentValue = f"{mqttRoot}/{description.key}"
-        _LOGGER.debug("mqttTopic: %s", description.mqttTopicCurrentValue)
+    globalsensors = copy.deepcopy(SENSORSGLOBAL)
+    for description in globalsensors:
+        description.mqttTopicCurrentValue = f"{mqttRoot}{description.key}"
+        LOGGER.debug("mqttTopic %s", description.mqttTopicCurrentValue)
         sensorList.append(
             openwbSensor(
                 uniqueID=integrationUniqueID,
                 description=description,
-                device_friendly_name=integrationUniqueID,
-                mqtt_root=mqttRoot,
+                devicefriendlyname=integrationUniqueID,
+                mqttroot=mqttRoot,
             )
         )
 
     # Create all sensors for each charge point, respectively.
     for chargePoint in range(1, nChargePoints + 1):
-        local_sensors_per_lp = copy.deepcopy(SENSORS_PER_LP)
-        for description in local_sensors_per_lp:
+        localsensorsperlp = copy.deepcopy(SENSORSPERLP)
+        for description in localsensorsperlp:
             description.mqttTopicCurrentValue = (
-                f"{mqttRoot}/lp/{str(chargePoint)}/{description.key}"
+                f"{mqttRoot}lp{str(chargePoint)}{description.key}"
             )
-            _LOGGER.debug("mqttTopic: %s", description.mqttTopicCurrentValue)
+            LOGGER.debug("mqttTopic %s", description.mqttTopicCurrentValue)
             sensorList.append(
                 openwbSensor(
                     uniqueID=integrationUniqueID,
                     description=description,
                     nChargePoints=int(nChargePoints),
                     currentChargePoint=chargePoint,
-                    device_friendly_name=integrationUniqueID,
-                    mqtt_root=mqttRoot,
+                    devicefriendlyname=integrationUniqueID,
+                    mqttroot=mqttRoot,
                 )
             )
 
@@ -81,36 +83,31 @@ class openwbSensor(OpenWBBaseEntity, SensorEntity):
 
     def __init__(
         self,
-        uniqueID: str | None,
-        device_friendly_name: str,
-        mqtt_root: str,
-        description: openwbSensorEntityDescription,
+        uniqueID: str | None = None,
+        devicefriendlyname: str = "",
+        mqttroot: str = "",
+        description: openwbSensorEntityDescription = openwbSensorEntityDescription,
         nChargePoints: int | None = None,
         currentChargePoint: int | None = None,
     ) -> None:
         """Initialize the sensor and the openWB device."""
-        super().__init__(
-            device_friendly_name=device_friendly_name,
-            mqtt_root=mqtt_root,
-        )
+        super().__init__(devicefriendlyname=devicefriendlyname, mqttroot=mqttroot)
 
-        self.entity_description = description
+        self.entitydescription = description
 
         if nChargePoints:
+            # Nur unique_id und name setzen, entity_id wird von HA generiert
             self._attr_unique_id = slugify(
                 f"{uniqueID}-CP{currentChargePoint}-{description.name}"
             )
-            self.entity_id = (
-                f"sensor.{uniqueID}-CP{currentChargePoint}-{description.name}"
-            )
-            self._attr_name = f"{description.name} (LP{currentChargePoint})"
+            self._attr_name = f"{description.name} LP{currentChargePoint}"
         else:
             self._attr_unique_id = slugify(f"{uniqueID}-{description.name}")
-            self.entity_id = f"sensor.{uniqueID}-{description.name}"
             self._attr_name = description.name
 
-    async def async_added_to_hass(self):
+    async def async_added_to_hass(self) -> None:
         """Subscribe to MQTT events."""
+        await super().async_added_to_hass()
 
         @callback
         def message_received(message):
@@ -118,29 +115,29 @@ class openwbSensor(OpenWBBaseEntity, SensorEntity):
             self._attr_native_value = message.payload
 
             # Convert data if a conversion function is defined
-            if self.entity_description.value_fn is not None:
-                self._attr_native_value = self.entity_description.value_fn(
+            if self.entitydescription.value_fn is not None:
+                self._attr_native_value = self.entitydescription.value_fn(
                     self._attr_native_value
                 )
 
             # Map values as defined in the value map dict.
-            if self.entity_description.valueMap is not None:
+            if self.entitydescription.value_map is not None:
                 try:
-                    self._attr_native_value = self.entity_description.valueMap.get(
+                    self._attr_native_value = self.entitydescription.value_map.get(
                         int(self._attr_native_value)
                     )
                 except ValueError:
                     self._attr_native_value = self._attr_native_value
 
-            # Reformat TimeRemaining --> timestamp.
-            if "TimeRemaining" in self.entity_description.key:
+            # Reformat TimeRemaining -> timestamp.
+            if "TimeRemaining" in self.entitydescription.key:
                 now = dt_util.utcnow()
                 if "H" in self._attr_native_value:
-                    tmp = self._attr_native_value.split()
-                    delta = timedelta(hours=int(tmp[0]), minutes=int(tmp[2]))
+                    tmp = self._attr_native_value.split(":")
+                    delta = timedelta(hours=int(tmp[0]), minutes=int(tmp[1]))
                     self._attr_native_value = now + delta
                 elif "Min" in self._attr_native_value:
-                    tmp = self._attr_native_value.split()
+                    tmp = self._attr_native_value.split(":")
                     delta = timedelta(minutes=int(tmp[0]))
                     self._attr_native_value = now + delta
                 else:
@@ -148,44 +145,33 @@ class openwbSensor(OpenWBBaseEntity, SensorEntity):
 
             # Reformat uptime sensor
             if "uptime" in self.entity_id:
-                reluptime = re.match(
-                    ".*\sup\s(.*),.*\d*user.*", self._attr_native_value
-                )[1]
+                reluptime = re.match(r"^(.+?\.)?(\d+)([hdm])(\.|$).*", self._attr_native_value, re.IGNORECASE)
                 days = 0
-                if re.match("(\d*)\sday.*", reluptime):
-                    days = re.match("(\d*)\sday", reluptime)[1]
-                    reluptime = re.match(".*,\s(.*)", reluptime)[1]
-                if re.match(".*min", reluptime):
+                if re.match(r"^\d+d", reluptime.group(1), re.IGNORECASE):
+                    days = re.match(r"^(\d+)d", reluptime.group(1), re.IGNORECASE).group(1)
+                if re.match(r"\d+h", reluptime.group(2), re.IGNORECASE):
                     hours = 0
-                    mins = re.match("(\d*)\s*min", reluptime)[1]
+                    mins = re.match(r"(\d+)h", reluptime.group(2), re.IGNORECASE).group(1)
                 else:
-                    hours, mins = re.match("\s?(\d*):0?(\d*)", reluptime).group(1, 2)
-                self._attr_native_value = f"{days} d {hours} h {mins} min"
+                    hours, mins = re.match(r"?(\d+):?0?(\d+)", reluptime.group(2)).group(1, 2)
+                self._attr_native_value = f"{days}d {hours}h {mins}min"
 
-            # If MQTT message contains IP --> set up configuration_url to visit the device
-            elif "ip_adresse" in self.entity_id:
+            # If MQTT message contains IP -> set up configurationurl to visit the device
+            elif "ipadresse" in self.entity_id:
                 device_registry = async_get_dev_reg(self.hass)
-                device = device_registry.async_get_device(
-                    self.device_info.get("identifiers")
-                )
-                device_registry.async_update_device(
-                    device.id,
-                    configuration_url=f"http://{message.payload}/openWB/web/index.php",
-                )
-                # device_registry.async_update_device
-            # If MQTT message contains version --> set sw_version of the device
+                device = device_registry.async_get_device(self.device_info.get("identifiers", []))
+                if device:
+                    device_registry.async_update_device(device.id, {"configuration_url": f"http://{message.payload}/openWB/web/index.php"})
+
+            # If MQTT message contains version -> set swversion of the device
             elif "version" in self.entity_id:
                 device_registry = async_get_dev_reg(self.hass)
-                device = device_registry.async_get_device(
-                    self.device_info.get("identifiers")
-                )
-                device_registry.async_update_device(
-                    device.id, sw_version=message.payload
-                )
-                # device_registry.async_update_device
+                device = device_registry.async_get_device(self.device_info.get("identifiers", []))
+                if device:
+                    device_registry.async_update_device(device.id, {"sw_version": message.payload})
 
             # Update icon of countPhasesInUse
-            elif "countPhasesInUse" in self.entity_description.key:
+            elif "countPhasesInUse" in self.entitydescription.key:
                 if int(message.payload) == 0:
                     self._attr_icon = "mdi:numeric-0-circle-outline"
                 elif int(message.payload) == 1:
@@ -201,7 +187,7 @@ class openwbSensor(OpenWBBaseEntity, SensorEntity):
         # Subscribe to MQTT topic and connect callack message
         await mqtt.async_subscribe(
             self.hass,
-            self.entity_description.mqttTopicCurrentValue,
+            self.entitydescription.mqttTopicCurrentValue,
             message_received,
             1,
         )
