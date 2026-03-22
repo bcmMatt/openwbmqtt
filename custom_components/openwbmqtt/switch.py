@@ -66,32 +66,28 @@ class openwbSwitch(OpenWBBaseEntity, SwitchEntity):
 
     def __init__(
         self,
-        unique_id: str,
-        device_friendly_name: str,
-        description: openwbSwitchEntityDescription,
-        mqtt_root: str,
+        uniqueid: str,
+        devicefriendlyname: str,
+        description: openwbSwitchEntityDescription = openwbSwitchEntityDescription,
+        mqttroot: str = "",
         currentChargePoint: int | None = None,
         nChargePoints: int | None = None,
     ) -> None:
         """Initialize the sensor and the openWB device."""
-        super().__init__(
-            device_friendly_name=device_friendly_name,
-            mqtt_root=mqtt_root,
-        )
+        super().__init__(devicefriendlyname=devicefriendlyname, mqttroot=mqttroot)
+
         # Initialize the inverter operation mode setting entity
-        self.entity_description = description
+        self.entitydescription = description
 
         if nChargePoints:
             self._attr_unique_id = slugify(
-                f"{unique_id}-CP{currentChargePoint}-{description.name}"
+                f"{uniqueid}-CP{currentChargePoint}-{description.name}"
             )
-            self.entity_id = (
-                f"{DOMAIN}.{unique_id}-CP{currentChargePoint}-{description.name}"
-            )
-            self._attr_name = f"{description.name} (LP{currentChargePoint})"
+            # self.entity_id = f"{DOMAIN}.{uniqueid}-CP{currentChargePoint}-{description.name}"  # GELÖSCHT
+            self._attr_name = f"{description.name} LP{currentChargePoint}"
         else:
-            self._attr_unique_id = slugify(f"{unique_id}-{description.name}")
-            self.entity_id = f"{DOMAIN}.{unique_id}-{description.name}"
+            self._attr_unique_id = slugify(f"{uniqueid}-{description.name}")
+            # self.entity_id = f"{DOMAIN}.{uniqueid}-{description.name}"  # GELÖSCHT
             self._attr_name = description.name
 
     async def async_added_to_hass(self):
