@@ -105,26 +105,31 @@ class openwbSensor(OpenWBBaseEntity, SensorEntity):
             )
             self._attr_name = f"{description.name} (LP{currentChargePoint})"
             # Ensure entity_id follows Home Assistant conventions
-            if "sensor" in self.entity_id or "switch" in self.entity_id:
+            if "sensor" in self.entity_id or "switch" in self.entity_id or "select" in self.entity_id or "number" in self.entity_id:
             # Replace invalid characters in entity_id
                 self.entity_id = self.entity_id.lower()  # Convert to lowercase
                 self.entity_id = self.entity_id.replace("-", "_")  # Replace dashes with underscores
                 self.entity_id = self.entity_id.replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")  # Replace umlauts
                 self.entity_id = self.entity_id.replace(" ", "_")  # Replace spaces with underscores
                 self.entity_id = self.entity_id.replace("(", "")  # Remove parentheses
-                self.entity_id = self.entity_id.replace(")", "")  
+                self.entity_id = self.entity_id.replace(")", "")   
+                self.entity_id = self.entity_id.replace("+", "_")  # Replace plus sign with underscore
+                self.entity_id = self.entity_id.replace(".", "") # Remove dots
         else:
             self._attr_unique_id = slugify(f"{uniqueID}-{description.name}")
             self.entity_id = f"sensor.{uniqueID}-{description.name}"
             self._attr_name = description.name
-            if "sensor" in self.entity_id or "switch" in self.entity_id:
+            # Ensure entity_id follows Home Assistant conventions
+            if "sensor" in self.entity_id or "switch" in self.entity_id or "select" in self.entity_id or "number" in self.entity_id:
             # Replace invalid characters in entity_id
                 self.entity_id = self.entity_id.lower()  # Convert to lowercase
                 self.entity_id = self.entity_id.replace("-", "_")  # Replace dashes with underscores
                 self.entity_id = self.entity_id.replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")  # Replace umlauts
                 self.entity_id = self.entity_id.replace(" ", "_")  # Replace spaces with underscores
                 self.entity_id = self.entity_id.replace("(", "")  # Remove parentheses
-                self.entity_id = self.entity_id.replace(")", "")  
+                self.entity_id = self.entity_id.replace(")", "")   
+                self.entity_id = self.entity_id.replace("+", "_")  # Replace plus sign with underscore
+                self.entity_id = self.entity_id.replace(".", "") # Remove dots
 
     async def async_added_to_hass(self):
         """Subscribe to MQTT events."""
