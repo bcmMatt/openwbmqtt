@@ -566,19 +566,19 @@ SENSORS_PER_LP = [
         entity_registry_enabled_default=False,
     ),
     openwbSensorEntityDescription(
-        key="APhase1",
+        key="aPhase1",
         name="Stromstärke_Phase1",
         device_class=SensorDeviceClass.CURRENT,
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
     ),
     openwbSensorEntityDescription(
-        key="APhase2",
+        key="aPhase2",
         name="Stromstärke_Phase2",
         device_class=SensorDeviceClass.CURRENT,
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
     ),
     openwbSensorEntityDescription(
-        key="APhase3",
+        key="aPhase3",
         name="Stromstärke_Phase3",
         device_class=SensorDeviceClass.CURRENT,
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
@@ -603,7 +603,7 @@ BINARY_SENSORS_PER_LP = [
         device_class=BinarySensorDeviceClass.POWER,
     ),
     openwbBinarySensorEntityDescription(
-        key="ChargePointEnabled",
+        key="chargePointEnabled",
         name="Ladepunkt_aktiv",
         device_class=BinarySensorDeviceClass.POWER,
     ),
@@ -805,42 +805,42 @@ SELECTS_GLOBAL = [
 
 SELECTS_PER_LP = [
     openwbSelectEntityDescription(
-        key="chargeLimitation",
+        key="charge_limitation",
         entity_category=EntityCategory.CONFIG,
-        name="Ladebegrenzung (Modus Sofortladen)",
+        name="ladebegrenzung_modus_sofortladen",
         valueMapCurrentValue={
-            0: "Keine",
-            1: "Energie",
-            2: "SoC",
+            0: "keine",
+            1: "energie",
+            2: "soc",
         },
         valueMapCommand={
-            "Keine": 0,
-            "Energie": 1,
-            "SoC": 2,
+            "keine": 0,
+            "energie": 1,
+            "soc": 2,
         },
         mqttTopicCommand="chargeLimitation",
         mqttTopicCurrentValue="chargeLimitation",
         modes=[
-            "Keine",
-            "Energie",
-            "SoC",
+            "keine",
+            "energie",
+            "soc",
         ],
     ),
 ]
 
 SWITCHES_PER_LP = [
     openwbSwitchEntityDescription(
-        key="ChargePointEnabled",
+        key="charge_point_enabled",
         entity_category=EntityCategory.CONFIG,
-        name="Ladepunkt_aktiv",
+        name="ladepunkt_aktiv",
         mqttTopicCommand="ChargePointEnabled",
         mqttTopicCurrentValue="ChargePointEnabled",
         device_class=SwitchDeviceClass.SWITCH,
     ),
     openwbSwitchEntityDescription(
-        key="PriceBasedCharging",
+        key="price_based_charging",
         entity_category=EntityCategory.CONFIG,
-        name="Preisbasiertes_Laden_Modus_Sofortladen",
+        name="preisbasiertes_laden_modus_sofortladen",
         device_class=SwitchDeviceClass.SWITCH,
         mqttTopicCommand="etBasedCharging",
         mqttTopicCurrentValue="etBasedCharging",
@@ -850,8 +850,8 @@ SWITCHES_PER_LP = [
 
 NUMBERS_GLOBAL = [
     openWBNumberEntityDescription(
-        key="minCurrentMinPv",
-        name="Mindestladestrom (Modus Min+PV-Laden)",
+        key="min_current_min_pv",
+        name="mindestladestrom_modus_min_pv_laden",
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
         device_class="Power",
         native_min_value=6.0,

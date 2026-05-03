@@ -148,9 +148,7 @@ class openwbSensor(OpenWBBaseEntity, SensorEntity):
 
             # Reformat uptime sensor
             if "uptime" in self.entity_id:
-                reluptime = re.match(
-                    ".*\sup\s(.*),.*\d*user.*", self._attr_native_value
-                )[1]
+                reluptime = re.match(r".*\sup\s(.*),.*\d*user.*", self._attr_native_value)[1]
                 days = 0
                 if re.match(r"(\d*)\sday.*", reluptime):
                     days = re.match(r"(\d*)\sday", reluptime)[1]
