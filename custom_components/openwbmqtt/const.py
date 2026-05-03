@@ -464,7 +464,7 @@ SENSORS_PER_LP = [
     ),
     openwbSensorEntityDescription(
         key="kWhActualCharged",
-        name="Geladene Energie (akt. Ladevorgang)",
+        name="Geladene Energie (aktueller Ladevorgang)",
         device_class=SensorDeviceClass.ENERGY,
         native_unit_of_measurement=UnitOfEnergy.KILO_WATT_HOUR,
         state_class=SensorStateClass.TOTAL,
