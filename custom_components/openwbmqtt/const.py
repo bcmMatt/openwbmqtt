@@ -567,19 +567,19 @@ SENSORS_PER_LP = [
     ),
     openwbSensorEntityDescription(
         key="aPhase1",
-        name="Stromstärke_Phase1",
+        name="stromstarke_phase_1",
         device_class=SensorDeviceClass.CURRENT,
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
     ),
     openwbSensorEntityDescription(
         key="aPhase2",
-        name="Stromstärke_Phase2",
+        name="stromstarke_phase_2",
         device_class=SensorDeviceClass.CURRENT,
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
     ),
     openwbSensorEntityDescription(
         key="aPhase3",
-        name="Stromstärke_Phase3",
+        name="stromstarke_phase_3",
         device_class=SensorDeviceClass.CURRENT,
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
     ),
