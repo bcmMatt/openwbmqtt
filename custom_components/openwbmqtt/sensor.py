@@ -111,6 +111,8 @@ class openwbSensor(OpenWBBaseEntity, SensorEntity):
                 self.entity_id = self.entity_id.replace("-", "_")  # Replace dashes with underscores
                 self.entity_id = self.entity_id.replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")  # Replace umlauts
                 self.entity_id = self.entity_id.replace(" ", "_")  # Replace spaces with underscores
+                self.entity_id = self.entity_id.replace("(", "")  # Remove parentheses
+                self.entity_id = self.entity_id.replace(")", "")  
         else:
             self._attr_unique_id = slugify(f"{uniqueID}-{description.name}")
             self.entity_id = f"sensor.{uniqueID}-{description.name}"
@@ -121,6 +123,8 @@ class openwbSensor(OpenWBBaseEntity, SensorEntity):
                 self.entity_id = self.entity_id.replace("-", "_")  # Replace dashes with underscores
                 self.entity_id = self.entity_id.replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")  # Replace umlauts
                 self.entity_id = self.entity_id.replace(" ", "_")  # Replace spaces with underscores
+                self.entity_id = self.entity_id.replace("(", "")  # Remove parentheses
+                self.entity_id = self.entity_id.replace(")", "")  
 
     async def async_added_to_hass(self):
         """Subscribe to MQTT events."""
@@ -175,6 +179,13 @@ class openwbSensor(OpenWBBaseEntity, SensorEntity):
 
             # If MQTT message contains IP --> set up configuration_url to visit the device
             elif "ip_adresse" in self.entity_id:
+                # Ensure entity_id follows Home Assistant conventions
+                self.entity_id = self.entity_id.lower()
+                self.entity_id = self.entity_id.replace("-", "_")
+                self.entity_id = self.entity_id.replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
+                self.entity_id = self.entity_id.replace(" ", "_")
+                self.entity_id = self.entity_id.replace("(", "")
+                self.entity_id = self.entity_id.replace(")", "")
                 device_registry = async_get_dev_reg(self.hass)
                 device = device_registry.async_get_device(
                     self.device_info.get("identifiers")
@@ -186,6 +197,13 @@ class openwbSensor(OpenWBBaseEntity, SensorEntity):
                 # device_registry.async_update_device
             # If MQTT message contains version --> set sw_version of the device
             elif "version" in self.entity_id:
+                # Ensure entity_id follows Home Assistant conventions
+                self.entity_id = self.entity_id.lower()
+                self.entity_id = self.entity_id.replace("-", "_")
+                self.entity_id = self.entity_id.replace("ä", "ae").replace("ö", "oe").replace("ü", "ue")
+                self.entity_id = self.entity_id.replace(" ", "_")
+                self.entity_id = self.entity_id.replace("(", "")
+                self.entity_id = self.entity_id.replace(")", "")
                 device_registry = async_get_dev_reg(self.hass)
                 device = device_registry.async_get_device(
                     self.device_info.get("identifiers")

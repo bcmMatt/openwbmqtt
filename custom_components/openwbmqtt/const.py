@@ -506,7 +506,7 @@ SENSORS_PER_LP = [
     ),
     openwbSensorEntityDescription(
         key="TimeRemaining",
-        name="Voraus. Ladeende",
+        name="Voraussichtliches Ladeende",
         device_class=SensorDeviceClass.TIMESTAMP,
         native_unit_of_measurement=None,
         icon="mdi:alarm",
