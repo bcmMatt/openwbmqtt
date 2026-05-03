@@ -124,8 +124,7 @@ class openWBNumber(OpenWBBaseEntity, NumberEntity):
                 self.entity_id = self.entity_id.replace("(", "")  # Remove parentheses
                 self.entity_id = self.entity_id.replace(")", "")   
                 self.entity_id = self.entity_id.replace("+", "_")  # Replace plus sign with underscore
-                self.entity_id = self.entity_id.replace(".", "") # Remove dots
-
+                
         else:
             self._attr_unique_id = slugify(f"{unique_id}-{description.name}")
             self.entity_id = f"{DOMAIN}.{unique_id}-{description.name}"
@@ -140,7 +139,7 @@ class openWBNumber(OpenWBBaseEntity, NumberEntity):
                 self.entity_id = self.entity_id.replace("(", "")  # Remove parentheses
                 self.entity_id = self.entity_id.replace(")", "")   
                 self.entity_id = self.entity_id.replace("+", "_")  # Replace plus sign with underscore
-                self.entity_id = self.entity_id.replace(".", "") # Remove dots
+                
         # if state is not None:
         #     self._attr_value = state
         # else:

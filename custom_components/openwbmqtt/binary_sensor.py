@@ -111,7 +111,7 @@ class openwbBinarySensor(OpenWBBaseEntity, BinarySensorEntity):
                 self.entity_id = self.entity_id.replace("(", "")  # Remove parentheses
                 self.entity_id = self.entity_id.replace(")", "")   
                 self.entity_id = self.entity_id.replace("+", "_")  # Replace plus sign with underscore
-                self.entity_id = self.entity_id.replace(".", "") # Remove dots
+                
         else:
             self._attr_unique_id = slugify(f"{uniqueID}-{description.name}")
             self.entity_id = f"{DOMAIN}.{uniqueID}-{description.name}"
@@ -126,8 +126,7 @@ class openwbBinarySensor(OpenWBBaseEntity, BinarySensorEntity):
                 self.entity_id = self.entity_id.replace("(", "")  # Remove parentheses
                 self.entity_id = self.entity_id.replace(")", "")   
                 self.entity_id = self.entity_id.replace("+", "_")  # Replace plus sign with underscore
-                self.entity_id = self.entity_id.replace(".", "") # Remove dots
-
+                
     async def async_added_to_hass(self):
         """Subscribe to MQTT events."""
 
