@@ -522,7 +522,7 @@ SENSORS_PER_LP = [
     ),
     openwbSensorEntityDescription(
         key="PfPhase1",
-        name="Leistungsfaktor (Phase 1)",
+        name="Leistungsfaktor_Phase1",
         device_class=None,
         native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.DIAGNOSTIC,
@@ -530,7 +530,7 @@ SENSORS_PER_LP = [
     ),
     openwbSensorEntityDescription(
         key="PfPhase2",
-        name="Leistungsfaktor (Phase 2)",
+        name="Leistungsfaktor_Phase2",
         device_class=None,
         native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.DIAGNOSTIC,
@@ -538,7 +538,7 @@ SENSORS_PER_LP = [
     ),
     openwbSensorEntityDescription(
         key="PfPhase3",
-        name="Leistungsfaktor (Phase 3)",
+        name="Leistungsfaktor_Phase3",
         device_class=None,
         native_unit_of_measurement=PERCENTAGE,
         entity_category=EntityCategory.DIAGNOSTIC,
@@ -546,40 +546,40 @@ SENSORS_PER_LP = [
     ),
     openwbSensorEntityDescription(
         key="VPhase1",
-        name="Spannung (Phase 1)",
+        name="Spannung_Phase1",
         device_class=SensorDeviceClass.VOLTAGE,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         entity_registry_enabled_default=False,
     ),
     openwbSensorEntityDescription(
         key="VPhase2",
-        name="Spannung (Phase 2)",
+        name="Spannung_Phase2",
         device_class=SensorDeviceClass.VOLTAGE,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         entity_registry_enabled_default=False,
     ),
     openwbSensorEntityDescription(
         key="VPhase3",
-        name="Spannung (Phase 3)",
+        name="Spannung_Phase3",
         device_class=SensorDeviceClass.VOLTAGE,
         native_unit_of_measurement=UnitOfElectricPotential.VOLT,
         entity_registry_enabled_default=False,
     ),
     openwbSensorEntityDescription(
         key="APhase1",
-        name="Stromstärke (Phase 1)",
+        name="Stromstärke_Phase1",
         device_class=SensorDeviceClass.CURRENT,
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
     ),
     openwbSensorEntityDescription(
         key="APhase2",
-        name="Stromstärke (Phase 2)",
+        name="Stromstärke_Phase2",
         device_class=SensorDeviceClass.CURRENT,
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
     ),
     openwbSensorEntityDescription(
         key="APhase3",
-        name="Stromstärke (Phase 3)",
+        name="Stromstärke_Phase3",
         device_class=SensorDeviceClass.CURRENT,
         native_unit_of_measurement=UnitOfElectricCurrent.AMPERE,
     ),
@@ -604,7 +604,7 @@ BINARY_SENSORS_PER_LP = [
     ),
     openwbBinarySensorEntityDescription(
         key="ChargePointEnabled",
-        name="Ladepunkt aktiv",
+        name="Ladepunkt_aktiv",
         device_class=BinarySensorDeviceClass.POWER,
     ),
     openwbBinarySensorEntityDescription(
@@ -832,7 +832,7 @@ SWITCHES_PER_LP = [
     openwbSwitchEntityDescription(
         key="ChargePointEnabled",
         entity_category=EntityCategory.CONFIG,
-        name="Ladepunkt aktiv",
+        name="Ladepunkt_aktiv",
         mqttTopicCommand="ChargePointEnabled",
         mqttTopicCurrentValue="ChargePointEnabled",
         device_class=SwitchDeviceClass.SWITCH,
@@ -840,7 +840,7 @@ SWITCHES_PER_LP = [
     openwbSwitchEntityDescription(
         key="PriceBasedCharging",
         entity_category=EntityCategory.CONFIG,
-        name="Preisbasiertes Laden (Modus Sofortladen)",
+        name="Preisbasiertes_Laden_Modus_Sofortladen",
         device_class=SwitchDeviceClass.SWITCH,
         mqttTopicCommand="etBasedCharging",
         mqttTopicCurrentValue="etBasedCharging",

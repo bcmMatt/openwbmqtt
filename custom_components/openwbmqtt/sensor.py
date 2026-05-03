@@ -152,14 +152,14 @@ class openwbSensor(OpenWBBaseEntity, SensorEntity):
                     ".*\sup\s(.*),.*\d*user.*", self._attr_native_value
                 )[1]
                 days = 0
-                if re.match("(\d*)\sday.*", reluptime):
-                    days = re.match("(\d*)\sday", reluptime)[1]
-                    reluptime = re.match(".*,\s(.*)", reluptime)[1]
+                if re.match(r"(\d*)\sday.*", reluptime):
+                    days = re.match(r"(\d*)\sday", reluptime)[1]
+                    reluptime = re.match(r".*,\s(.*)", reluptime)[1]
                 if re.match(".*min", reluptime):
                     hours = 0
-                    mins = re.match("(\d*)\s*min", reluptime)[1]
+                    mins = re.match(r"(\d*)\s*min", reluptime)[1]
                 else:
-                    hours, mins = re.match("\s?(\d*):0?(\d*)", reluptime).group(1, 2)
+                    hours, mins = re.match(r"\s?(\d*):0?(\d*)", reluptime).group(1, 2)
                 self._attr_native_value = f"{days} d {hours} h {mins} min"
 
             # If MQTT message contains IP --> set up configuration_url to visit the device
